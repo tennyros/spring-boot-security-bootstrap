@@ -116,7 +116,7 @@ public class AdminController {
         if (userToDelete.getId() == 1) {
             model.addAttribute(ERROR_MESSAGE, "You cannot delete the super administrator!");
             model.addAttribute("users", userService.getAllUsers());
-            return UPDATE_USER_URL;
+            return "/admin/admin_page";
         }
 
         if (userToDelete.getRoles().stream().anyMatch(role ->

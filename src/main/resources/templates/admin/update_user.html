@@ -5,9 +5,9 @@
         <title>Update user</title>
     </head>
     <body>
-        <div th:if="${errorMessage}" style="color: red;">
-            <p th:text="${errorMessage}"></p>
-        </div>
+<!--        <div th:if="${errorMessage}" style="color: red;">-->
+<!--            <p th:text="${errorMessage}"></p>-->
+<!--        </div>-->
         <form th:method="post" th:action="@{/admin/update}" th:object="${userDto}" style="display:inline;">
             <input type="hidden" th:field="*{id}"/>
             <div>
@@ -50,12 +50,6 @@
             </div>
             <br>
             <input type="submit" value="Update"/>
-        </form>
-
-        <form th:method="post" th:action="@{/admin/delete}" style="display:inline;"
-              onsubmit="return confirm('Are you sure you want to delete this user?')">
-            <input type="hidden" name="id" th:value="${userDto.id}"/>
-            <button type="submit">Delete</button>
         </form>
 
         <form th:method="get" th:action="@{/admin/admin_page}" style="display:inline;">
