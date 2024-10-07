@@ -34,7 +34,8 @@ public class AdminController {
 
     private static final String ROLES = "roles";
     private static final String UPDATE_USER_URL = "/admin/update_user";
-    private static final String REGISTRATION_URL = "/admin/registration";
+    private static final String REGISTRATION_URL = "/registration";
+    private static final String ADMIN_PAGE = "/admin/admin_page";
     private static final String REDIRECT_ADMIN_PAGE = "redirect:/admin/admin_page";
     private static final String ERROR_MESSAGE = "errorMessage";
 
@@ -49,7 +50,9 @@ public class AdminController {
     @GetMapping(value = "/admin_page")
     public String adminFullInfo(Model model) {
         model.addAttribute("users", userService.getAllUsers());
-        return "/admin/admin_page";
+        model.addAttribute("userDto", new UserDto());
+        model.addAttribute("roles", roleService.getAllRoles());
+        return ADMIN_PAGE;
     }
 
     @GetMapping(value = "/registration")
@@ -65,7 +68,7 @@ public class AdminController {
         userValidator.validate(userDto, result);
         if (result.hasErrors()) {
             model.addAttribute(ROLES, roleService.getAllRoles());
-            return REGISTRATION_URL;
+            return ADMIN_PAGE;
         }
         User user = userService.convertToUser(userDto);
         Set<Role> selectedRoles = userDto.getRoles();
@@ -116,14 +119,14 @@ public class AdminController {
         if (userToDelete.getId() == 1) {
             model.addAttribute(ERROR_MESSAGE, "You cannot delete the super administrator!");
             model.addAttribute("users", userService.getAllUsers());
-            return "/admin/admin_page";
+            return ADMIN_PAGE;
         }
 
         if (userToDelete.getRoles().stream().anyMatch(role ->
                 role.getAuthority().equals("ROLE_ADMIN")) && currentUser.getId() != 1) {
             model.addAttribute(ERROR_MESSAGE, "Only super administrator can delete other administrators!");
-            model.addAttribute(ROLES, roleService.getAllRoles());
-            return UPDATE_USER_URL;
+            model.addAttribute("users", userService.getAllUsers());
+            return ADMIN_PAGE;
         }
 
         try {

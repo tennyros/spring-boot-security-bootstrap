@@ -1,18 +1,16 @@
     <!DOCTYPE html>
-    <html lang="en" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <html lang="en">
     <head>
         <meta charset="UTF-8">
         <title>Update user</title>
     </head>
     <body>
-<!--        <div th:if="${errorMessage}" style="color: red;">-->
-<!--            <p th:text="${errorMessage}"></p>-->
-<!--        </div>-->
         <form th:method="post" th:action="@{/admin/update}" th:object="${userDto}" style="display:inline;">
             <input type="hidden" th:field="*{id}"/>
-            <div>
+            <div class="mb-1">
                 <label for="firstName">Enter new first name: </label>
-                <input type="text" th:field="*{firstName}" id="firstName" placeholder="first name">
+                <input type="text" th:field="*{firstName}" class="form-control form-control-lg"
+                       id="firstName" placeholder="first name">
                 <span th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}" style="color:red"></span>
             </div>
             <div>
