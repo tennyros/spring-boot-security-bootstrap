@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <div th:fragment="form(userDto)">
+        <div class="form-container">
+            <form th:method="post" th:action="@{/admin/registration}" th:object="${userDto}" style="display:inline;">
+                <div>
+                    <label for="firstName">First name</label>
+                    <input type="text" th:field="*{firstName}" id="firstName"
+                           class="form-control" placeholder="First name"/>
+                    <span th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}" style="color:red"></span>
+                </div>
+                <div>
+                    <label for="lastName">Last name</label>
+                    <input type="text" th:field="*{lastName}" id="lastName"
+                           class="form-control" placeholder="Last name"/>
+                    <span th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}" style="color:red"></span>
+                </div>
+                <div>
+                    <label for="age">Age</label>
+                    <input type="number" th:field="*{age}" id="age"
+                           class="form-control" placeholder="Age"/>
+                    <span th:if="${#fields.hasErrors('age')}" th:errors="*{age}" style="color:red"></span>
+                </div>
+                <div>
+                    <label for="email">Email</label>
+                    <input type="text" th:field="*{email}" id="email"
+                           class="form-control" placeholder="Email"/>
+                    <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}" style="color:red"></span>
+                </div>
+                <div>
+                    <label for="password">Password</label>
+                    <input type="password" th:field="*{password}" id="password"
+                           class="form-control" placeholder="Password"/>
+                    <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}" style="color:red"></span>
+                </div>
+                <div>
+                    <label for="passwordConfirm">Confirm password</label>
+                    <input type="password" th:field="*{passwordConfirm}" id="passwordConfirm"
+                           class="form-control" placeholder="Confirm password"/>
+                    <span th:if="${#fields.hasErrors('passwordConfirm')}" th:errors="*{passwordConfirm}" style="color:red"></span>
+                </div>
+                <div>
+                    <label for="roles">Role</label>
+                    <select multiple class="form-control" th:field="*{roles}" id="roles" size="2">
+                        <option th:each="role : ${roles}"
+                                th:value="${role.id}"
+                                th:text="${role.roleName.substring(5)}"></option>
+                    </select>
+                </div>
+                <br>
+                <button type="submit" class="btn btn-success btn-center">Add new user</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

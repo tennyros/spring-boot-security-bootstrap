@@ -68,6 +68,7 @@ public class AdminController {
         userValidator.validate(userDto, result);
         if (result.hasErrors()) {
             model.addAttribute(ROLES, roleService.getAllRoles());
+//            model.addAttribute("activeTab", "new-user");
             return ADMIN_PAGE;
         }
         User user = userService.convertToUser(userDto);
