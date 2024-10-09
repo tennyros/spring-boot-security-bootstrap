@@ -33,10 +33,8 @@ public class AdminController {
     private final UserValidator userValidator;
 
     private static final String ROLES = "roles";
-    private static final String UPDATE_USER_URL = "/admin/update_user";
-    private static final String REGISTRATION_URL = "/registration";
-    private static final String ADMIN_PAGE = "/admin/admin_page";
-    private static final String REDIRECT_ADMIN_PAGE = "redirect:/admin/admin_page";
+    private static final String ADMIN_PAGE = "/admin/admin";
+    private static final String REDIRECT_ADMIN_PAGE = "redirect:/admin/admin";
     private static final String ERROR_MESSAGE = "errorMessage";
 
     @Autowired
@@ -47,7 +45,7 @@ public class AdminController {
         this.userValidator = userValidator;
     }
 
-    @GetMapping(value = "/admin_page")
+    @GetMapping(value = "/admin")
     public String adminFullInfo(Model model) {
         model.addAttribute("users", userService.getAllUsers());
         model.addAttribute("userDto", new UserDto());
@@ -59,7 +57,7 @@ public class AdminController {
     public String registration(@ModelAttribute("userDto") UserDto userDto, Model model) {
         model.addAttribute(ROLES, roleService.getAllRoles());
         userDto.setRoles(new HashSet<>(Collections.singletonList(roleService.getRoleByName("ROLE_USER"))));
-        return REGISTRATION_URL;
+        return ADMIN_PAGE;
     }
 
     @PostMapping(value = "/registration")
@@ -68,7 +66,7 @@ public class AdminController {
         userValidator.validate(userDto, result);
         if (result.hasErrors()) {
             model.addAttribute(ROLES, roleService.getAllRoles());
-//            model.addAttribute("activeTab", "new-user");
+            model.addAttribute("activeTab", "new-user");
             return ADMIN_PAGE;
         }
         User user = userService.convertToUser(userDto);
@@ -86,7 +84,7 @@ public class AdminController {
                 .anyMatch(role -> role.getAuthority().equals("ROLE_ADMIN")));
         model.addAttribute("userDto", userDto);
         model.addAttribute(ROLES, roleService.getAllRoles());
-        return UPDATE_USER_URL;
+        return "admin/update_user";
     }
 
     @PostMapping(value = "/update")
@@ -95,7 +93,7 @@ public class AdminController {
         userValidator.validate(userDto, result);
         if (result.hasErrors()) {
             model.addAttribute(ROLES, roleService.getAllRoles());
-            return UPDATE_USER_URL;
+            return "admin/update_user";
         }
         User existingUser = userService.getUserById(userDto.getId());
         if (userDto.getRoles() == null || userDto.getRoles().isEmpty()) {
@@ -135,7 +133,7 @@ public class AdminController {
         } catch (UnsupportedOperationException e) {
             log.error("Error while deleting user with id: {}", userId, e);
             model.addAttribute(ERROR_MESSAGE, e.getMessage());
-            return "/error_page";
+            return "error";
         }
 
         return REDIRECT_ADMIN_PAGE;

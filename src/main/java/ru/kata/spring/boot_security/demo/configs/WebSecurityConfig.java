@@ -17,7 +17,7 @@ import ru.kata.spring.boot_security.demo.services.AppUserDetailsService;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private static final String LOGIN_URL = "/auth/login";
+    private static final String LOGIN_URL = "/login";
     private final SuccessUserHandler successUserHandler;
     private final AppUserDetailsService appUserDetailsService;
 
@@ -31,15 +31,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers(LOGIN_URL, "/error_page").permitAll()
+                .antMatchers(LOGIN_URL, "/error").permitAll()
                 .antMatchers("/admin/**").hasRole("ADMIN")
-                .antMatchers("/user/**").hasAnyRole("USER", "ADMIN")
+                .antMatchers("/user/**").hasAnyRole("ADMIN", "USER")
                 .anyRequest().authenticated()
                 .and()
                 .formLogin().loginPage(LOGIN_URL)
                 .loginProcessingUrl("/process_login")
                 .successHandler(successUserHandler)
-                .failureUrl("/auth/login?error=true")
+                .failureUrl("/login?error=true")
                 .and()
                 .logout()
                 .logoutUrl("/logout")
