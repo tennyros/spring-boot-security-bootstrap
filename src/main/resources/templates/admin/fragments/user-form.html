@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <div th:fragment="form">
+        <div>
+            <label for="firstName">First name</label>
+            <input type="text" th:field="*{firstName}" id="firstName"
+                   class="form-control" placeholder="First name"/><br>
+            <div th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"
+                 class="alert alert-danger" role="alert" style="color:red; text-align: center;"></div>
+        </div>
+        <div>
+            <label for="lastName">Last name</label>
+            <input type="text" th:field="*{lastName}" id="lastName"
+                   class="form-control" placeholder="Last name"/><br>
+            <div th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"
+                 class="alert alert-danger" role="alert" style="color:red; text-align: center;"></div>
+        </div>
+        <div>
+            <label for="age">Age</label>
+            <input type="number" th:field="*{age}" id="age"
+                   class="form-control" placeholder="Age"/><br>
+            <div th:if="${#fields.hasErrors('age')}" th:errors="*{age}"
+                 class="alert alert-danger" role="alert" style="color:red; text-align: center;"></div>
+        </div>
+        <div>
+            <label for="email">Email</label>
+            <input type="text" th:field="*{email}" id="email"
+                   class="form-control" placeholder="Email"/><br>
+<!--                           class="form-control is-valid" placeholder="Email"/>-->
+<!--                    <div class="valid-feedback">-->
+<!--                        Looks good!-->
+<!--                    </div>-->
+            <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}"
+                 class="alert alert-danger" role="alert" style="color:red; text-align: center;"></div>
+        </div>
+        <div>
+            <label for="password">Password</label>
+            <input type="password" th:field="*{password}" id="password"
+                   class="form-control" placeholder="Password"/><br>
+            <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}"
+                 class="alert alert-danger" role="alert" style="color:red; text-align: center;"></div>
+        </div>
+        <div>
+            <label for="passwordConfirm">Confirm password</label>
+            <input type="password" th:field="*{passwordConfirm}" id="passwordConfirm"
+                   class="form-control" placeholder="Confirm password"/><br>
+            <div th:if="${#fields.hasErrors('passwordConfirm')}" th:errors="*{passwordConfirm}"
+                 class="alert alert-danger" role="alert" style="color:red; text-align: center;"></div>
+        </div>
+        <div>
+            <label for="roles">Role</label>
+            <select multiple class="form-control" th:field="*{roles}" id="roles" size="2">
+                <option th:each="role : ${roles}"
+                        th:value="${role.id}"
+                        th:text="${role.roleName.substring(5)}"></option>
+            </select><br>
+            <div th:if="${#fields.hasErrors('roles')}" th:errors="*{roles}"
+                 class="alert alert-danger" role="alert" style="color:red; text-align: center;"></div>
+        </div>
+    </div>
+</body>
+</html>

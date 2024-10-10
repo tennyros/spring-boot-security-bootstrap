@@ -4,7 +4,7 @@
     <div th:fragment="users_navbar">
         <nav class="navbar navbar-dark bg-dark">
             <div class="container-fluid">
-                <span class="navbar-text text-white">
+                <span class="navbar-text text-white" style="font-size: 1.3rem;">
                     <strong><span th:text="${#authentication.name}"></span></strong>
                     with roles:
                     <span th:each="role, iterStat : ${#authentication.principal.authorities}"

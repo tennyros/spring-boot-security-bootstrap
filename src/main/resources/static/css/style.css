@@ -1,0 +1,15 @@
+.form-container {
+    max-width: 300px;
+    margin: 0 auto;
+}
+
+.btn-center {
+    display: block;
+    margin: 0 auto;
+}
+
+label {
+    font-weight: bold;
+    display: block;
+    text-align: center;
+}

@@ -41,6 +41,7 @@ public class UserDto {
     @Max(value = 125, message = "Age must not be more than 125!")
     private Integer age;
 
+    @NotEmpty(message = "Role must be selected!")
     private Set<Role> roles;
 
     private boolean admin;

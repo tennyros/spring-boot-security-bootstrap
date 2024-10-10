@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <div th:fragment="users_table">
+        <div th:if="${#lists.isEmpty(users)}">
+            <p>There are no users!</p>
+        </div>
+        <div th:unless="${#lists.isEmpty(users)}">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">First name</th>
+                    <th scope="col">Last name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Age</th>
+                    <th scope="col">Roles</th>
+                    <th scope="col">Edit</th>
+                    <th scope="col">Delete</th>
+                </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="user : ${users}">
+                        <td th:text="${user.id}"></td>
+                        <td th:text="${user.firstName}"></td>
+                        <td th:text="${user.lastName}"></td>
+                        <td th:text="${user.email}"></td>
+                        <td th:text="${user.age}"></td>
+                        <td th:text="${#strings.arrayJoin(user.roles, ' ').replace('ROLE_', '')}"></td>
+                        <td>
+<!--                            <form th:method="get" th:action="@{/admin/update_user}">-->
+<!--                                <input type="hidden" name="id" th:value="${user.id}">-->
+                                <form th:method="post" th:action="@{/admin/update}" th:object="${userDto}" style="display:inline;">
+                                    <input type="hidden" th:field="*{id}"/>
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Edit</button>
+                                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">Edit user</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form id="edit-user-from-control">
+                                                    <div>
+                                                        <label for="id">ID</label>
+                                                        <input type="text" th:field="*{id}" id="id" class="form-control" disabled readonly/><br>
+<!--                                                        <div th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"-->
+<!--                                                             class="alert alert-danger" role="alert" style="color:red; text-align: center;"></div>-->
+                                                    </div>
+                                                    <div th:include="admin/fragments/user-form :: form"></div>
+                                                </form>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                <button type="submit" class="btn btn-primary">Edit</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+<!--                            <button type="button" class="btn btn-primary"-->
+<!--                                    th:attr="data-id=${user.id}, data-firstname=${user.firstName},-->
+<!--                                             data-lastname=${user.lastName}, data-email=${user.email},-->
+<!--                                             data-age=${user.age}, data-roles=${#strings.arrayJoin(user.roles, ' ').replace('ROLE_', '')}"-->
+<!--                                    onclick="showEditUserModal(this)">-->
+<!--                                Edit-->
+<!--                            </button>-->
+                        </td>
+                        <td>
+                            <form th:method="post" th:action="@{/admin/delete}" style="display:inline;"
+                                  onsubmit="return confirm('Are you sure you want to delete this user?')">
+                                <input type="hidden" name="id" th:value="${user.id}"/>
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

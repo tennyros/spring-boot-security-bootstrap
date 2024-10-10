@@ -8,7 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.dto.UserDto;
-import ru.kata.spring.boot_security.demo.exceptions.UserNotFoundException;
+import ru.kata.spring.boot_security.demo.exception.UserNotFoundException;
 import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.services.RegistrationService;
@@ -18,8 +18,6 @@ import ru.kata.spring.boot_security.demo.util.UserValidator;
 
 import javax.validation.Valid;
 import java.security.Principal;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
 
 @Controller
@@ -27,12 +25,14 @@ import java.util.Set;
 public class AdminController {
 
     private static final Logger log = LoggerFactory.getLogger(AdminController.class);
+
     private final UserService userService;
     private final RoleService roleService;
     private final RegistrationService registrationService;
     private final UserValidator userValidator;
 
     private static final String ROLES = "roles";
+    private static final String USERS = "users";
     private static final String ADMIN_PAGE = "/admin/admin";
     private static final String REDIRECT_ADMIN_PAGE = "redirect:/admin/admin";
     private static final String ERROR_MESSAGE = "errorMessage";
@@ -47,25 +47,27 @@ public class AdminController {
 
     @GetMapping(value = "/admin")
     public String adminFullInfo(Model model) {
-        model.addAttribute("users", userService.getAllUsers());
+        model.addAttribute(USERS, userService.getAllUsers());
         model.addAttribute("userDto", new UserDto());
-        model.addAttribute("roles", roleService.getAllRoles());
-        return ADMIN_PAGE;
-    }
-
-    @GetMapping(value = "/registration")
-    public String registration(@ModelAttribute("userDto") UserDto userDto, Model model) {
         model.addAttribute(ROLES, roleService.getAllRoles());
-        userDto.setRoles(new HashSet<>(Collections.singletonList(roleService.getRoleByName("ROLE_USER"))));
         return ADMIN_PAGE;
     }
 
-    @PostMapping(value = "/registration")
+//    @GetMapping(value = "/new_user")
+//    public String registration(@ModelAttribute("userDto") UserDto userDto, Model model) {
+//        model.addAttribute("usersDto", userService.getAllUsers());
+//        model.addAttribute(ROLES, roleService.getAllRoles());
+//        userDto.setRoles(new HashSet<>(Collections.singletonList(roleService.getRoleByName("ROLE_USER"))));
+//        return ADMIN_PAGE;
+//    }
+
+    @PostMapping(value = "/new_user")
     public String registrationExecution(@Valid @ModelAttribute("userDto") UserDto userDto,
                                         BindingResult result, Model model) {
         userValidator.validate(userDto, result);
         if (result.hasErrors()) {
             model.addAttribute(ROLES, roleService.getAllRoles());
+            model.addAttribute(USERS, userService.getAllUsers());
             model.addAttribute("activeTab", "new-user");
             return ADMIN_PAGE;
         }
@@ -76,16 +78,17 @@ public class AdminController {
         return REDIRECT_ADMIN_PAGE;
     }
 
-    @GetMapping(value = "/edit")
-    public String editUser(@RequestParam("id") Long id, Model model) {
-        User user = userService.getUserById(id);
-        UserDto userDto = userService.convertToUserDto(user);
-        userDto.setAdmin(user.getRoles().stream()
-                .anyMatch(role -> role.getAuthority().equals("ROLE_ADMIN")));
-        model.addAttribute("userDto", userDto);
-        model.addAttribute(ROLES, roleService.getAllRoles());
-        return "admin/update_user";
-    }
+//    @GetMapping(value = "/edit")
+//    public String editUser(@RequestParam("id") Long id, Model model) {
+//        User user = userService.getUserById(id);
+//        UserDto userDto = userService.convertToUserDto(user);
+//        userDto.setAdmin(user.getRoles().stream()
+//                .anyMatch(role -> role.getAuthority().equals("ROLE_ADMIN")));
+//        model.addAttribute("userDto", userDto);
+//        model.addAttribute(ROLES, roleService.getAllRoles());
+//        model.addAttribute(USERS, userService.getAllUsers());
+//        return "admin/admin";
+//    }
 
     @PostMapping(value = "/update")
     public String updateUserExecution(@Valid @ModelAttribute("userDto") UserDto userDto,
@@ -93,7 +96,9 @@ public class AdminController {
         userValidator.validate(userDto, result);
         if (result.hasErrors()) {
             model.addAttribute(ROLES, roleService.getAllRoles());
-            return "admin/update_user";
+            model.addAttribute(USERS, userService.getAllUsers());
+            model.addAttribute("activeTab", "new-user");
+            return ADMIN_PAGE;
         }
         User existingUser = userService.getUserById(userDto.getId());
         if (userDto.getRoles() == null || userDto.getRoles().isEmpty()) {
@@ -117,14 +122,14 @@ public class AdminController {
 
         if (userToDelete.getId() == 1) {
             model.addAttribute(ERROR_MESSAGE, "You cannot delete the super administrator!");
-            model.addAttribute("users", userService.getAllUsers());
+            model.addAttribute(USERS, userService.getAllUsers());
             return ADMIN_PAGE;
         }
 
         if (userToDelete.getRoles().stream().anyMatch(role ->
                 role.getAuthority().equals("ROLE_ADMIN")) && currentUser.getId() != 1) {
             model.addAttribute(ERROR_MESSAGE, "Only super administrator can delete other administrators!");
-            model.addAttribute("users", userService.getAllUsers());
+            model.addAttribute(USERS, userService.getAllUsers());
             return ADMIN_PAGE;
         }
 
