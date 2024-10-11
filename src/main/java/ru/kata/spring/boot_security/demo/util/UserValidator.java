@@ -33,6 +33,7 @@ public class UserValidator implements Validator {
         if (userByEmail.isPresent() && !userByEmail.get().getId().equals(userDto.getId())) {
             errors.rejectValue("email", "", "User with such email is already exists!");
         }
+
         if (!userDto.getPassword().equals(userDto.getPasswordConfirm())) {
             errors.rejectValue("passwordConfirm", "error.userDto",
                     "Passwords do not match!");

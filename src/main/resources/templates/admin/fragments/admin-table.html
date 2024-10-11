@@ -28,10 +28,8 @@
                         <td th:text="${user.age}"></td>
                         <td th:text="${#strings.arrayJoin(user.roles, ' ').replace('ROLE_', '')}"></td>
                         <td>
-<!--                            <form th:method="get" th:action="@{/admin/update_user}">-->
-<!--                                <input type="hidden" name="id" th:value="${user.id}">-->
-                                <form th:method="post" th:action="@{/admin/update}" th:object="${userDto}" style="display:inline;">
-                                    <input type="hidden" th:field="*{id}"/>
+                            <form th:method="post" th:action="@{/admin/update}" th:object="${userDto}" style="display:inline;">
+<!--                                <input type="hidden" th:value="${user.id}"/>-->
                                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Edit</button>
                                 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <div class="modal-dialog">
@@ -40,15 +38,83 @@
                                                 <h5 class="modal-title" id="exampleModalLabel">Edit user</h5>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
-                                            <div class="modal-body">
-                                                <form id="edit-user-from-control">
+                                            <div class="modal-body" id="edit-user-form-control">
+                                                <form>
                                                     <div>
                                                         <label for="id">ID</label>
-                                                        <input type="text" th:field="*{id}" id="id" class="form-control" disabled readonly/><br>
-<!--                                                        <div th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"-->
-<!--                                                             class="alert alert-danger" role="alert" style="color:red; text-align: center;"></div>-->
+                                                        <input type="text" th:value="${user.id}" id="id" class="form-control" disabled readonly/><br>
                                                     </div>
-                                                    <div th:include="admin/fragments/user-form :: form"></div>
+                                                    <div>
+                                                        <label for="firstName">First name</label>
+                                                        <input type="text" th:value="${user.firstName}" id="firstName"
+                                                               class="form-control" placeholder="First name" minlength="3" maxlength="18" required/><br>
+                                                        <div th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"
+                                                             class="alert alert-danger" role="alert" style="color:red; text-align: center;"></div>
+                                                    </div>
+                                                    <div>
+                                                        <label for="lastName">Last name</label>
+                                                        <input type="text" th:value="${user.lastName}" id="lastName"
+                                                               class="form-control" placeholder="Last name" minlength="3" maxlength="18" required/><br>
+                                                        <div th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"
+                                                             class="alert alert-danger" role="alert" style="color:red; text-align: center;"></div>
+                                                    </div>
+                                                    <div>
+                                                        <label for="age">Age</label>
+                                                        <input type="number" th:value="${user.age}" id="age"
+                                                               class="form-control" placeholder="Age" min="14" max="125" required/><br>
+                                                        <div th:if="${#fields.hasErrors('age')}" th:errors="*{age}"
+                                                             class="alert alert-danger" role="alert" style="color:red; text-align: center;"></div>
+                                                    </div>
+                                                    <div>
+                                                        <label for="email">Email</label>
+                                                        <input type="email" th:value="${user.email}" id="email"
+                                                               class="form-control" placeholder="Email" required/><br>
+                                                        <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}"
+                                                             class="alert alert-danger" role="alert" style="color:red; text-align: center;"></div>
+                                                    </div>
+                                                    <div>
+                                                        <label for="password">Password</label>
+                                                        <input type="password" th:value="*{password}" id="password"
+                                                               class="form-control" placeholder="Password" minlength="6" maxlength="18" required/><br>
+                                                        <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}"
+                                                             class="alert alert-danger" role="alert" style="color:red; text-align: center;"></div>
+                                                    </div>
+                                                    <div>
+                                                        <label for="passwordConfirm">Confirm password</label>
+                                                        <input type="password" th:field="*{passwordConfirm}" id="passwordConfirm"
+                                                               class="form-control" placeholder="Confirm password" minlength="6" maxlength="18" required/><br>
+                                                        <div th:if="${#fields.hasErrors('passwordConfirm')}" th:errors="*{passwordConfirm}"
+                                                             class="alert alert-danger" role="alert" style="color:red; text-align: center;"></div>
+                                                        <div id="password-error" class="alert alert-danger" role="alert" style="color:red; text-align: center; display: none;">
+                                                            Passwords do not match
+                                                        </div>
+                                                    </div>
+
+                                                    <script>
+                                                        document.getElementById('passwordConfirm').addEventListener('input', function() {
+                                                            const password = document.getElementById('password').value;
+                                                            const confirmPassword = this.value;
+                                                            const errorMessage = document.getElementById('password-error');
+
+                                                            if (confirmPassword !== password) {
+                                                                errorMessage.style.display = 'block';
+                                                            } else {
+                                                                errorMessage.style.display = 'none';
+                                                            }
+                                                        });
+                                                    </script>
+
+                                                    <div>
+                                                        <label for="roles">Role</label>
+                                                        <select multiple class="form-control" th:field="*{roles}" id="roles" size="2" required>
+                                                            <option th:each="role : ${roles}"
+                                                                    th:value="${role.id}"
+                                                                    th:text="${role.roleName.substring(5)}"></option>
+                                                        </select><br>
+                                                        <div th:if="${#fields.hasErrors('roles')}" th:errors="*{roles}"
+                                                             class="alert alert-danger" role="alert" style="color:red; text-align: center; max-width: 250px;"></div>
+                                                    </div>
+<!--                                                    <div th:replace="admin/fragments/user-form :: form"></div>-->
                                                 </form>
                                             </div>
                                             <div class="modal-footer">
@@ -59,13 +125,6 @@
                                     </div>
                                 </div>
                             </form>
-<!--                            <button type="button" class="btn btn-primary"-->
-<!--                                    th:attr="data-id=${user.id}, data-firstname=${user.firstName},-->
-<!--                                             data-lastname=${user.lastName}, data-email=${user.email},-->
-<!--                                             data-age=${user.age}, data-roles=${#strings.arrayJoin(user.roles, ' ').replace('ROLE_', '')}"-->
-<!--                                    onclick="showEditUserModal(this)">-->
-<!--                                Edit-->
-<!--                            </button>-->
                         </td>
                         <td>
                             <form th:method="post" th:action="@{/admin/delete}" style="display:inline;"

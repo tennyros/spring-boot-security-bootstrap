@@ -97,7 +97,7 @@ public class AdminController {
         if (result.hasErrors()) {
             model.addAttribute(ROLES, roleService.getAllRoles());
             model.addAttribute(USERS, userService.getAllUsers());
-            model.addAttribute("activeTab", "new-user");
+//            model.addAttribute("activeTab", "new-user");
             return ADMIN_PAGE;
         }
         User existingUser = userService.getUserById(userDto.getId());
@@ -123,6 +123,7 @@ public class AdminController {
         if (userToDelete.getId() == 1) {
             model.addAttribute(ERROR_MESSAGE, "You cannot delete the super administrator!");
             model.addAttribute(USERS, userService.getAllUsers());
+            model.addAttribute(ROLES, roleService.getAllRoles());
             return ADMIN_PAGE;
         }
 
@@ -130,6 +131,7 @@ public class AdminController {
                 role.getAuthority().equals("ROLE_ADMIN")) && currentUser.getId() != 1) {
             model.addAttribute(ERROR_MESSAGE, "Only super administrator can delete other administrators!");
             model.addAttribute(USERS, userService.getAllUsers());
+            model.addAttribute(ROLES, roleService.getAllRoles());
             return ADMIN_PAGE;
         }
 
