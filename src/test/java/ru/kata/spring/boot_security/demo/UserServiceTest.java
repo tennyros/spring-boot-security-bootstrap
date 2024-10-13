@@ -9,7 +9,7 @@
 //import org.mockito.junit.jupiter.MockitoExtension;
 //import ru.kata.spring.boot_security.demo.models.User;
 //import ru.kata.spring.boot_security.demo.repositories.UserRepository;
-//import ru.kata.spring.boot_security.demo.services.UserServiceImpl;
+//import ru.kata.spring.boot_security.demo.services.impl.UserServiceImpl;
 //
 //import java.util.Optional;
 //

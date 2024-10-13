@@ -11,10 +11,10 @@
 </head>
 <body>
 
-    <div th:include="fragments/users-navbar-logout :: users_navbar" id="page_navbar"></div>
+    <div th:replace="fragments/navbar-logout :: navbar"></div>
 
     <div class="d-flex justify-content-between">
-        <div th:include="admin/fragments/view-sidebar :: sidebar" id="sidebar_style"></div>
+        <div th:include="admin/fragments/sidebar :: sidebar" id="sidebar_style"></div>
         <div class="container mt-4">
             <h1>User information-page</h1>
             <div class="card">

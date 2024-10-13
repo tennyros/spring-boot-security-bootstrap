@@ -1,4 +1,4 @@
-package ru.kata.spring.boot_security.demo.services;
+package ru.kata.spring.boot_security.demo.services.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -6,9 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.kata.spring.boot_security.demo.dto.UserDto;
 import ru.kata.spring.boot_security.demo.repositories.UserRepository;
 import ru.kata.spring.boot_security.demo.models.User;
+import ru.kata.spring.boot_security.demo.services.UserService;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,11 +29,18 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void addUser(User user) {
+        boolean isAdmin = user.getRoles().stream()
+                .anyMatch(role -> "ROLE_ADMIN".equals(role.getRoleName()));
+        user.setAdmin(isAdmin);
         userRepository.save(user);
     }
 
     @Override
     public void updateUser(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        boolean isAdmin = user.getRoles().stream()
+                .anyMatch(role -> "ROLE_ADMIN".equals(role.getRoleName()));
+        user.setAdmin(isAdmin);
         userRepository.save(user);
     }
 
@@ -62,42 +69,5 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     public Optional<User> getUserByEmail(String email) {
         return userRepository.findByEmail(email);
-    }
-
-    @Override
-    public User convertToUser(UserDto userDto) {
-        User user;
-        if (userDto.getId() != null) {
-            user = userRepository.findById(userDto.getId())
-                    .orElseThrow(() -> {
-                        log.error("User with ID {} not found!", userDto.getId());
-                        return new IllegalArgumentException("User with ID " + userDto.getId() + " not found!");
-                    });
-            user.setPassword(passwordEncoder.encode(userDto.getPassword()));
-        } else {
-            user = new User();
-            user.setPassword(userDto.getPassword());
-        }
-        user.setId(userDto.getId());
-        user.setFirstName(userDto.getFirstName());
-        user.setLastName(userDto.getLastName());
-        user.setEmail(userDto.getEmail());
-        user.setAge(userDto.getAge());
-        user.setAdmin(userDto.getIsAdmin());
-        user.setRoles(userDto.getRoles());
-        return user;
-    }
-
-    @Override
-    public UserDto convertToUserDto(User user) {
-        UserDto userDto = new UserDto();
-        userDto.setId(user.getId());
-        userDto.setFirstName(user.getFirstName());
-        userDto.setLastName(user.getLastName());
-        userDto.setPassword(passwordEncoder.encode(user.getPassword()));
-        userDto.setEmail(user.getEmail());
-        userDto.setAge(user.getAge());
-        userDto.setRoles(user.getRoles());
-        return userDto;
     }
 }

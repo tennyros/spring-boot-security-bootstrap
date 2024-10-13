@@ -1,4 +1,4 @@
-package ru.kata.spring.boot_security.demo.dto;
+package ru.kata.spring.boot_security.demo.dtos;
 
 import lombok.*;
 import ru.kata.spring.boot_security.demo.models.Role;

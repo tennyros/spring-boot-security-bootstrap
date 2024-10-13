@@ -14,10 +14,10 @@
 </head>
 <body>
 
-    <div th:include="fragments/users-navbar-logout :: users_navbar" id="page_navbar"></div>
+    <div th:replace="fragments/navbar-logout :: navbar"></div>
 
     <div class="d-flex justify-content-between">
-        <div th:include="admin/fragments/view-sidebar :: sidebar"></div>
+        <div th:replace="admin/fragments/sidebar :: sidebar"></div>
         <div class="container mt-4">
             <h1>Admin panel</h1>
             <div th:if="${errorMessage}" th:text="${errorMessage}" class="alert alert-danger"></div>
@@ -39,7 +39,129 @@
                          id="admin-view" role="tabpanel" aria-labelledby="admin-view-tab">
                         <h5 class="card-header">All users</h5>
                         <div class="card-body">
-                            <div th:include="admin/fragments/admin-table :: users_table"></div>
+<!--                            <div th:replace="admin/fragments/admin-table :: users_table"></div>-->
+                            <div th:fragment="users_table">
+                                <div th:if="${#lists.isEmpty(users)}">
+                                    <p>There are no users!</p>
+                                </div>
+                                <div th:unless="${#lists.isEmpty(users)}">
+                                    <table class="table table-striped">
+                                        <thead>
+                                        <tr>
+                                            <th scope="col">ID</th>
+                                            <th scope="col">First name</th>
+                                            <th scope="col">Last name</th>
+                                            <th scope="col">Email</th>
+                                            <th scope="col">Age</th>
+                                            <th scope="col">Roles</th>
+                                            <th scope="col">Edit</th>
+                                            <th scope="col">Delete</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="user : ${users}">
+                                            <td th:text="${user.id}"></td>
+                                            <td th:text="${user.firstName}"></td>
+                                            <td th:text="${user.lastName}"></td>
+                                            <td th:text="${user.email}"></td>
+                                            <td th:text="${user.age}"></td>
+                                            <td th:text="${#strings.arrayJoin(user.roles, ' ').replace('ROLE_', '')}"></td>
+                                            <td>
+                                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#userEditModal"
+                                                        th:attr="data-id=${user.id}, data-name=${user.firstName}, data-email=${user.email}">Edit</button>
+                                            </td>
+                                            <td>
+                                                <form th:method="post" th:action="@{/admin/delete}" style="display:inline;"
+                                                      onsubmit="return confirm('Are you sure you want to delete this user?')">
+                                                    <input type="hidden" name="id" th:value="${user.id}"/>
+                                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div class="modal fade" id="userEditModal" tabindex="-1" aria-labelledby="userEditModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <form th:method="post" th:action="@{/admin/update}" th:object="${userDto}">
+                                            <input type="hidden" th:field="*{id}" id="user-id"/>
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="userEditModalLabel">Edit user</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body" id="edit-user-form-control">
+                                                <div>
+                                                    <label for="id">ID</label>
+                                                    <input type="text" th:field="*{id}" id="id" class="form-control" disabled readonly/><br>
+                                                </div>
+                                                <div th:replace="admin/fragments/user-form :: form"></div>
+<!--                                                <div>-->
+<!--                                                    <label for="firstName">First name</label>-->
+<!--                                                    <input type="text" th:field="*{firstName}" id="firstName"-->
+<!--                                                           class="form-control" placeholder="First name" minlength="3" maxlength="18" required/><br>-->
+<!--                                                    <div th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"-->
+<!--                                                         class="alert alert-danger" role="alert" style="color:red; text-align: center;"></div>-->
+<!--                                                </div>-->
+<!--                                                <div>-->
+<!--                                                    <label for="lastName">Last name</label>-->
+<!--                                                    <input type="text" th:field="*{lastName}" id="lastName"-->
+<!--                                                           class="form-control" placeholder="Last name" minlength="3" maxlength="18" required/><br>-->
+<!--                                                    <div th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"-->
+<!--                                                         class="alert alert-danger" role="alert" style="color:red; text-align: center;"></div>-->
+<!--                                                </div>-->
+<!--                                                <div>-->
+<!--                                                    <label for="age">Age</label>-->
+<!--                                                    <input type="number" th:field="*{age}" id="age"-->
+<!--                                                           class="form-control" placeholder="Age" min="14" max="125" required/><br>-->
+<!--                                                    <div th:if="${#fields.hasErrors('age')}" th:errors="*{age}"-->
+<!--                                                         class="alert alert-danger" role="alert" style="color:red; text-align: center;"></div>-->
+<!--                                                </div>-->
+<!--                                                <div>-->
+<!--                                                    <label for="email">Email</label>-->
+<!--                                                    <input type="email" th:field="*{email}" id="email"-->
+<!--                                                           class="form-control" placeholder="Email" required/><br>-->
+<!--                                                    <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}"-->
+<!--                                                         class="alert alert-danger" role="alert" style="color:red; text-align: center;"></div>-->
+<!--                                                </div>-->
+<!--                                                <div>-->
+<!--                                                    <label for="password">Password</label>-->
+<!--                                                    <input type="password" th:field="*{password}" id="password"-->
+<!--                                                           class="form-control" placeholder="Password" minlength="6" maxlength="18" required/><br>-->
+<!--                                                    <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}"-->
+<!--                                                         class="alert alert-danger" role="alert" style="color:red; text-align: center;"></div>-->
+<!--                                                </div>-->
+<!--                                                <div>-->
+<!--                                                    <label for="passwordConfirm">Confirm password</label>-->
+<!--                                                    <input type="password" th:field="*{passwordConfirm}" id="passwordConfirm"-->
+<!--                                                           class="form-control" placeholder="Confirm password" minlength="6" maxlength="18" required/><br>-->
+<!--                                                    <div th:if="${#fields.hasErrors('passwordConfirm')}" th:errors="*{passwordConfirm}"-->
+<!--                                                         class="alert alert-danger" role="alert" style="color:red; text-align: center;"></div>-->
+<!--                                                    <div id="password-error" class="alert alert-danger" role="alert" style="color:red; text-align: center; display: none;">-->
+<!--                                                        Passwords do not match.-->
+<!--                                                    </div>-->
+<!--                                                </div>-->
+<!--                                                <div th:if="*{id != 1}">-->
+<!--                                                    <label for="roles">Role</label>-->
+<!--                                                    <select multiple class="form-control" th:field="*{roles}" id="roles" size="2" required>-->
+<!--                                                        <option th:each="role : ${roles}"-->
+<!--                                                                th:value="${role.id}"-->
+<!--                                                                th:text="${role.roleName.substring(5)}"></option>-->
+<!--                                                    </select><br>-->
+<!--                                                    <div th:if="${#fields.hasErrors('roles')}" th:errors="*{roles}"-->
+<!--                                                         class="alert alert-danger" role="alert" style="color:red; text-align: center; max-width: 250px;"></div>-->
+<!--                                                </div>-->
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                <button type="submit" class="btn btn-primary">Edit</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="tab-pane fade" th:classappend="${activeTab == 'new-user' ? 'show active' : ''}"
@@ -48,7 +170,7 @@
                         <div class="card-body">
                             <div class="form-container">
                                 <form th:method="post" th:action="@{/admin/new_user}" th:object="${userDto}" style="display:inline;">
-                                    <div th:include="admin/fragments/user-form :: form"></div>
+                                    <div th:replace="admin/fragments/user-form :: form"></div>
                                     <button type="submit" class="btn btn-success btn-center">Add new user</button>
                                 </form>
                             </div>
@@ -58,10 +180,6 @@
             </div>
         </div>
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-            crossorigin="anonymous"></script>
-
+    <div th:replace="admin/fragments/scripts :: scripts"></div>
 </body>
 </html>
