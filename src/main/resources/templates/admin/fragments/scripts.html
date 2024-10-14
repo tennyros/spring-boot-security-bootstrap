@@ -20,20 +20,27 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            var editUserModal = document.getElementById('userEditModal');
+            const editUserModal = document.getElementById('userEditModal');
             editUserModal.addEventListener('show.bs.modal', function (event) {
-                var button = event.relatedTarget; // Кнопка, которая вызвала модальное окно
-                var userId = button.getAttribute('data-id');
-                var userName = button.getAttribute('data-name');
-                var userEmail = button.getAttribute('data-email');
+                const button = event.relatedTarget;
+                const userId = button.getAttribute('data-bs-id');
+                const userFirstName = button.getAttribute('data-bs-firstname');
+                const userLastName = button.getAttribute('data-bs-lastname');
+                const userAge = button.getAttribute('data-bs-age');
+                const userEmail = button.getAttribute('data-bs-email');
 
-                // Заполняем поля в модальной форме
-                var modalIdInput = editUserModal.querySelector('#user-id');
-                var modalNameInput = editUserModal.querySelector('#user-name');
-                var modalEmailInput = editUserModal.querySelector('#user-email');
+                const modalIdInput = editUserModal.querySelector('#user-id');
+                const hiddenIdInput = editUserModal.querySelector('#id');
+                const modalFirstNameInput = editUserModal.querySelector('#user-firstname');
+                const modalLastNameInput = editUserModal.querySelector('#user-lastname');
+                const modalAgeInput = editUserModal.querySelector('#user-age');
+                const modalEmailInput = editUserModal.querySelector('#user-email');
 
                 modalIdInput.value = userId;
-                modalNameInput.value = userName;
+                hiddenIdInput.value = userId;
+                modalFirstNameInput.value = userFirstName;
+                modalLastNameInput.value = userLastName;
+                modalAgeInput.value = userAge;
                 modalEmailInput.value = userEmail;
             });
         });

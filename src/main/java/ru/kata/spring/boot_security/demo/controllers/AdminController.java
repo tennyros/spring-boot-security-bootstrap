@@ -73,9 +73,6 @@ public class AdminController {
         User user = userMapper.toEntity(userDto);
         Set<Role> selectedRoles = userDto.getRoles();
         user.setRoles(selectedRoles);
-//        boolean isAdmin = user.getRoles().stream()
-//                .anyMatch(role -> ADMIN_ROLE.equals(role.getRoleName()));
-//        user.setAdmin(isAdmin);
         registrationService.register(user);
         return REDIRECT_ADMIN_PAGE;
     }
@@ -91,9 +88,6 @@ public class AdminController {
             return ADMIN_PAGE;
         }
         User user = userMapper.toEntity(userDto);
-//        boolean isAdmin = user.getRoles().stream()
-//                .anyMatch(role -> ADMIN_ROLE.equals(role.getRoleName()));
-//        user.setAdmin(isAdmin);
         userService.updateUser(user);
         return REDIRECT_ADMIN_PAGE;
     }
@@ -105,7 +99,6 @@ public class AdminController {
                     log.error("Current user is not found for principal {}", principal.getName());
                     return new UserNotFoundException("Current user now found!");
                 });
-
         Long userId = userDto.getId();
         User userToDelete = userService.getUserById(userId);
         if (userToDelete.getId() == 1) {

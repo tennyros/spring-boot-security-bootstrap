@@ -1,28 +1,28 @@
 <div th:fragment="form">
     <div>
-        <label for="firstName">First name</label>
-        <input type="text" th:field="*{firstName}" id="firstName"
+        <label for="user-firstname">First name</label>
+        <input type="text" th:field="*{firstName}" id="user-firstname"
                class="form-control" placeholder="First name" minlength="3" maxlength="18" required/><br>
         <div th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"
              class="alert alert-danger" role="alert" style="color:red; text-align: center;"></div>
     </div>
     <div>
-        <label for="lastName">Last name</label>
-        <input type="text" th:field="*{lastName}" id="lastName"
+        <label for="user-lastname">Last name</label>
+        <input type="text" th:field="*{lastName}" id="user-lastname"
                class="form-control" placeholder="Last name" minlength="3" maxlength="18" required/><br>
         <div th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"
              class="alert alert-danger" role="alert" style="color:red; text-align: center;"></div>
     </div>
     <div>
-        <label for="age">Age</label>
-        <input type="number" th:field="*{age}" id="age"
+        <label for="user-age">Age</label>
+        <input type="number" th:field="*{age}" id="user-age"
                class="form-control" placeholder="Age" min="14" max="125" required/><br>
         <div th:if="${#fields.hasErrors('age')}" th:errors="*{age}"
              class="alert alert-danger" role="alert" style="color:red; text-align: center;"></div>
     </div>
     <div>
-        <label for="email">Email</label>
-        <input type="email" th:field="*{email}" id="email"
+        <label for="user-email">Email</label>
+        <input type="email" th:field="*{email}" id="user-email"
                class="form-control" placeholder="Email" required/><br>
         <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}"
              class="alert alert-danger" role="alert" style="color:red; text-align: center;"></div>

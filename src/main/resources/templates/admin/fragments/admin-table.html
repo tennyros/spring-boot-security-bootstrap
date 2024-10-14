@@ -1,312 +1,43 @@
-<!--<div th:fragment="users_table">-->
-<!--    <div th:if="${#lists.isEmpty(users)}">-->
-<!--        <p>There are no users!</p>-->
-<!--    </div>-->
-<!--    <div th:unless="${#lists.isEmpty(users)}">-->
-<!--        <table class="table table-striped">-->
-<!--            <thead>-->
-<!--            <tr>-->
-<!--                <th scope="col">ID</th>-->
-<!--                <th scope="col">First name</th>-->
-<!--                <th scope="col">Last name</th>-->
-<!--                <th scope="col">Email</th>-->
-<!--                <th scope="col">Age</th>-->
-<!--                <th scope="col">Roles</th>-->
-<!--                <th scope="col">Edit</th>-->
-<!--                <th scope="col">Delete</th>-->
-<!--            </tr>-->
-<!--            </thead>-->
-<!--            <tbody>-->
-<!--                <tr th:each="user : ${users}">-->
-<!--                    <td th:text="${user.id}"></td>-->
-<!--                    <td th:text="${user.firstName}"></td>-->
-<!--                    <td th:text="${user.lastName}"></td>-->
-<!--                    <td th:text="${user.email}"></td>-->
-<!--                    <td th:text="${user.age}"></td>-->
-<!--                    <td th:text="${#strings.arrayJoin(user.roles, ' ').replace('ROLE_', '')}"></td>-->
-<!--                    <td>-->
-<!--                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"-->
-<!--                                onclick="fillEditForm([[${user.id}]], [[${user.id}]], '[[${user.username}]]',-->
-<!--                                '[[${user.email}]]', [[${user.roles}]])">Edit</button>-->
-<!--                        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">-->
-<!--                            <div class="modal-dialog">-->
-<!--                                <div class="modal-content">-->
-<!--                                    <form th:method="post" th:action="@{/admin/update}" th:object="${userDto}" style="display:inline;">-->
-<!--&lt;!&ndash;                                            <input type="hidden" th:value="${user.id}"/>&ndash;&gt;-->
-<!--                                        <div class="modal-header">-->
-<!--                                            <h5 class="modal-title" id="exampleModalLabel">Edit user</h5>-->
-<!--                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
-<!--                                        </div>-->
-<!--                                        <div class="modal-body" id="edit-user-form-control">-->
-<!--                                            <div>-->
-<!--                                                <label for="id">ID</label>-->
-<!--                                                <input type="text" th:value="*{id}" id="id" class="form-control"/><br>-->
-<!--&lt;!&ndash;                                                    <input type="text" th:value="*{id}" id="id" class="form-control" disabled readonly/><br>&ndash;&gt;-->
-<!--                                            </div>-->
-<!--                                            <div>-->
-<!--                                                <label for="firstName">First name</label>-->
-<!--                                                <input type="text" th:field="*{firstName}" id="firstName"-->
-<!--                                                       class="form-control" placeholder="First name" minlength="3" maxlength="18" required/><br>-->
-<!--                                                <div th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"-->
-<!--                                                     class="alert alert-danger" role="alert" style="color:red; text-align: center;"></div>-->
-<!--                                            </div>-->
-<!--                                            <div>-->
-<!--                                                <label for="lastName">Last name</label>-->
-<!--                                                <input type="text" th:field="*{lastName}" id="lastName"-->
-<!--                                                       class="form-control" placeholder="Last name" minlength="3" maxlength="18" required/><br>-->
-<!--                                                <div th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"-->
-<!--                                                     class="alert alert-danger" role="alert" style="color:red; text-align: center;"></div>-->
-<!--                                            </div>-->
-<!--                                            <div>-->
-<!--                                                <label for="age">Age</label>-->
-<!--                                                <input type="number" th:field="*{age}" id="age"-->
-<!--                                                       class="form-control" placeholder="Age" min="14" max="125" required/><br>-->
-<!--                                                <div th:if="${#fields.hasErrors('age')}" th:errors="*{age}"-->
-<!--                                                     class="alert alert-danger" role="alert" style="color:red; text-align: center;"></div>-->
-<!--                                            </div>-->
-<!--                                            <div>-->
-<!--                                                <label for="email">Email</label>-->
-<!--                                                <input type="email" th:field="*{email}" id="email"-->
-<!--                                                       class="form-control" placeholder="Email" required/><br>-->
-<!--                                                <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}"-->
-<!--                                                     class="alert alert-danger" role="alert" style="color:red; text-align: center;"></div>-->
-<!--                                            </div>-->
-<!--                                            <div>-->
-<!--                                                <label for="password">Password</label>-->
-<!--                                                <input type="password" th:field="*{password}" id="password"-->
-<!--                                                       class="form-control" placeholder="Password" minlength="6" maxlength="18" required/><br>-->
-<!--                                                <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}"-->
-<!--                                                     class="alert alert-danger" role="alert" style="color:red; text-align: center;"></div>-->
-<!--                                            </div>-->
-<!--                                            <div>-->
-<!--                                                <label for="passwordConfirm">Confirm password</label>-->
-<!--                                                <input type="password" th:field="*{passwordConfirm}" id="passwordConfirm"-->
-<!--                                                       class="form-control" placeholder="Confirm password" minlength="6" maxlength="18" required/><br>-->
-<!--                                                <div th:if="${#fields.hasErrors('passwordConfirm')}" th:errors="*{passwordConfirm}"-->
-<!--                                                     class="alert alert-danger" role="alert" style="color:red; text-align: center;"></div>-->
-<!--                                                <div id="password-error" class="alert alert-danger" role="alert" style="color:red; text-align: center; display: none;">-->
-<!--                                                    Passwords do not match.-->
-<!--                                                </div>-->
-<!--                                            </div>-->
-<!--&lt;!&ndash;                                                <div>&ndash;&gt;-->
-<!--                                            <div th:if="*{id != 1}">-->
-<!--                                                <label for="roles">Role</label>-->
-<!--                                                <select multiple class="form-control" th:field="*{roles}" id="roles" size="2" required>-->
-<!--                                                    <option th:each="role : ${roles}"-->
-<!--                                                            th:value="${role.id}"-->
-<!--                                                            th:text="${role.roleName.substring(5)}"></option>-->
-<!--                                                </select><br>-->
-<!--                                                <div th:if="${#fields.hasErrors('roles')}" th:errors="*{roles}"-->
-<!--                                                     class="alert alert-danger" role="alert" style="color:red; text-align: center; max-width: 250px;"></div>-->
-<!--                                            </div>-->
-<!--&lt;!&ndash;                                                <div th:replace="admin/fragments/user-form :: form"></div>&ndash;&gt;-->
-<!--                                        </div>-->
-
-<!--                                        <div class="modal-footer">-->
-<!--                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>-->
-<!--                                            <button type="submit" class="btn btn-primary">Edit</button>-->
-<!--                                        </div>-->
-<!--                                    </form>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                    </td>-->
-<!--                    <td>-->
-<!--                        <form th:method="post" th:action="@{/admin/delete}" style="display:inline;"-->
-<!--                              onsubmit="return confirm('Are you sure you want to delete this user?')">-->
-<!--                            <input type="hidden" name="id" th:value="${user.id}"/>-->
-<!--                            <button type="submit" class="btn btn-danger">Delete</button>-->
-<!--                        </form>-->
-<!--                    </td>-->
-<!--                </tr>-->
-<!--            </tbody>-->
-<!--        </table>-->
-<!--    </div>-->
-<!--</div>-->
-<!--<script>-->
-<!--    document.getElementById('passwordConfirm').addEventListener('input', function() {-->
-<!--        const password = document.getElementById('password').value;-->
-<!--        const confirmPassword = this.value;-->
-<!--        const errorMessage = document.getElementById('password-error');-->
-
-<!--        if (confirmPassword !== password) {-->
-<!--            errorMessage.style.display = 'block';-->
-<!--        } else {-->
-<!--            errorMessage.style.display = 'none';-->
-<!--        }-->
-<!--    });-->
-<!--</script>-->
-
-<!--<script>-->
-<!--    function fillEditForm(id, username, email, roles) {-->
-<!--        document.getElementById('userId').value = id;-->
-<!--        document.getElementById('username').value = username;-->
-<!--        document.getElementById('email').value = email;-->
-
-<!--        const rolesSelect = document.getElementById('roles');-->
-<!--        for (let i = 0; i < rolesSelect.options.length; i++) {-->
-<!--            rolesSelect.options[i].selected = roles.some(role => role.id === parseInt(rolesSelect.options[i].value));-->
-<!--        }-->
-<!--    }-->
-<!--</script>-->
-
-
-
-<!--<div th:fragment="users_table">-->
-<!--    <div th:if="${#lists.isEmpty(users)}">-->
-<!--        <p>There are no users!</p>-->
-<!--    </div>-->
-<!--    <div th:unless="${#lists.isEmpty(users)}">-->
-<!--        <table class="table table-striped">-->
-<!--            <thead>-->
-<!--            <tr>-->
-<!--                <th scope="col">ID</th>-->
-<!--                <th scope="col">First name</th>-->
-<!--                <th scope="col">Last name</th>-->
-<!--                <th scope="col">Email</th>-->
-<!--                <th scope="col">Age</th>-->
-<!--                <th scope="col">Roles</th>-->
-<!--                <th scope="col">Edit</th>-->
-<!--                <th scope="col">Delete</th>-->
-<!--            </tr>-->
-<!--            </thead>-->
-<!--            <tbody>-->
-<!--            <tr th:each="user : ${users}">-->
-<!--                <td th:text="${user.id}"></td>-->
-<!--                <td th:text="${user.firstName}"></td>-->
-<!--                <td th:text="${user.lastName}"></td>-->
-<!--                <td th:text="${user.email}"></td>-->
-<!--                <td th:text="${user.age}"></td>-->
-<!--                <td th:text="${#strings.arrayJoin(user.roles, ' ').replace('ROLE_', '')}"></td>-->
-<!--                <td>-->
-<!--                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#userEditModal"-->
-<!--                            th:attr="data-id=${user.id}, data-name=${user.firstName}, data-email=${user.email}">Edit</button>-->
-<!--&lt;!&ndash;                                                    onclick="fillEditForm([[${user.id}]], '[[${user.firstName}]]', '[[${user.lastName}]]',&ndash;&gt;-->
-<!--&lt;!&ndash;                                                    '[[${user.email}]]', [[${user.age}]], [[${user.roles}]])">Edit</button>&ndash;&gt;-->
-<!--                    &lt;!&ndash;                    >Edit</button>&ndash;&gt;-->
-<!--                </td>-->
-<!--                <td>-->
-<!--                    <form th:method="post" th:action="@{/admin/delete}" style="display:inline;"-->
-<!--                          onsubmit="return confirm('Are you sure you want to delete this user?')">-->
-<!--                        <input type="hidden" name="id" th:value="${user.id}"/>-->
-<!--                        <button type="submit" class="btn btn-danger">Delete</button>-->
-<!--                    </form>-->
-<!--                </td>-->
-<!--            </tr>-->
-<!--            </tbody>-->
-<!--        </table>-->
-<!--    </div>-->
-<!--</div>-->
-
-<!--<div class="modal fade" id="userEditModal" tabindex="-1" aria-labelledby="userEditModalLabel" aria-hidden="true">-->
-<!--    <div class="modal-dialog">-->
-<!--        <div class="modal-content">-->
-<!--            <form th:method="post" th:action="@{/admin/update}" th:object="${userDto}">-->
-<!--                <div class="modal-header">-->
-<!--                    <h5 class="modal-title" id="userEditModalLabel">Edit user</h5>-->
-<!--                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
-<!--                </div>-->
-<!--                <div class="modal-body">-->
-<!--                    <div>-->
-<!--                        <label for="id">ID</label>-->
-<!--                        <input type="text" th:field="*{id}" id="id" class="form-control" readonly/><br>-->
-<!--                    </div>-->
-<!--                    <div>-->
-<!--                        <label for="firstName">First name</label>-->
-<!--                        <input type="text" th:field="*{firstName}" id="firstName"-->
-<!--                               class="form-control" placeholder="First name" minlength="3" maxlength="18" required/><br>-->
-<!--                        <div th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"-->
-<!--                             class="alert alert-danger" role="alert" style="color:red; text-align: center;"></div>-->
-<!--                    </div>-->
-<!--                    <div>-->
-<!--                        <label for="lastName">Last name</label>-->
-<!--                        <input type="text" th:field="*{lastName}" id="lastName"-->
-<!--                               class="form-control" placeholder="Last name" minlength="3" maxlength="18" required/><br>-->
-<!--                        <div th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"-->
-<!--                             class="alert alert-danger" role="alert" style="color:red; text-align: center;"></div>-->
-<!--                    </div>-->
-<!--                    <div>-->
-<!--                        <label for="age">Age</label>-->
-<!--                        <input type="number" th:field="*{age}" id="age"-->
-<!--                               class="form-control" placeholder="Age" min="14" max="125" required/><br>-->
-<!--                        <div th:if="${#fields.hasErrors('age')}" th:errors="*{age}"-->
-<!--                             class="alert alert-danger" role="alert" style="color:red; text-align: center;"></div>-->
-<!--                    </div>-->
-<!--                    <div>-->
-<!--                        <label for="email">Email</label>-->
-<!--                        <input type="email" th:field="*{email}" id="email"-->
-<!--                               class="form-control" placeholder="Email" required/><br>-->
-<!--                        <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}"-->
-<!--                             class="alert alert-danger" role="alert" style="color:red; text-align: center;"></div>-->
-<!--                    </div>-->
-<!--                    <div>-->
-<!--                        <label for="password">Password</label>-->
-<!--                        <input type="password" th:field="*{password}" id="password"-->
-<!--                               class="form-control" placeholder="Password" minlength="6" maxlength="18" required/><br>-->
-<!--                        <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}"-->
-<!--                             class="alert alert-danger" role="alert" style="color:red; text-align: center;"></div>-->
-<!--                    </div>-->
-<!--                    <div>-->
-<!--                        <label for="passwordConfirm">Confirm password</label>-->
-<!--                        <input type="password" th:field="*{passwordConfirm}" id="passwordConfirm"-->
-<!--                               class="form-control" placeholder="Confirm password" minlength="6" maxlength="18" required/><br>-->
-<!--                        <div th:if="${#fields.hasErrors('passwordConfirm')}" th:errors="*{passwordConfirm}"-->
-<!--                             class="alert alert-danger" role="alert" style="color:red; text-align: center;"></div>-->
-<!--                        <div id="password-error" class="alert alert-danger" role="alert" style="color:red; text-align: center; display: none;">-->
-<!--                            Passwords do not match.-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                    <div th:if="*{id != 1}">-->
-<!--                        <label for="roles">Role</label>-->
-<!--                        <select multiple class="form-control" th:field="*{roles}" id="roles" size="2" required>-->
-<!--                            <option th:each="role : ${roles}"-->
-<!--                                    th:value="${role.id}"-->
-<!--                                    th:text="${role.roleName.substring(5)}"></option>-->
-<!--                        </select><br>-->
-<!--                        <div th:if="${#fields.hasErrors('roles')}" th:errors="*{roles}"-->
-<!--                             class="alert alert-danger" role="alert" style="color:red; text-align: center; max-width: 250px;"></div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--                <div class="modal-footer">-->
-<!--                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>-->
-<!--                    <button type="submit" class="btn btn-primary">Edit</button>-->
-<!--                </div>-->
-<!--            </form>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--</div>-->
-
-<!--<script>-->
-<!--    function fillEditForm(id, firstName, lastName, email, age, roles) {-->
-<!--        document.getElementById('id').value = id;-->
-<!--        document.getElementById('firstName').value = firstName;-->
-<!--        document.getElementById('lastName').value = lastName;-->
-<!--        document.getElementById('email').value = email;-->
-<!--        document.getElementById('age').value = age;-->
-
-<!--        const rolesSelect = document.getElementById('roles');-->
-<!--        for (let i = 0; i < rolesSelect.options.length; i++) {-->
-<!--            rolesSelect.options[i].selected = roles.includes(parseInt(rolesSelect.options[i].value));-->
-<!--        }-->
-<!--    }-->
-<!--</script>-->
-
-<!--<script>-->
-<!--    document.getElementById('passwordConfirm').addEventListener('input', function() {-->
-<!--        const password = document.getElementById('password').value;-->
-<!--        const confirmPassword = this.value;-->
-<!--        const errorMessage = document.getElementById('password-error');-->
-
-<!--        if (confirmPassword !== password) {-->
-<!--            errorMessage.style.display = 'block';-->
-<!--        } else {-->
-<!--            errorMessage.style.display = 'none';-->
-<!--        }-->
-<!--    });-->
-<!--</script>-->
-
-<!--<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>-->
-
-<!--<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"-->
-<!--        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"-->
-<!--        crossorigin="anonymous"></script>-->
+<div th:fragment="users_table">
+    <div th:if="${#lists.isEmpty(users)}">
+        <p>There are no users!</p>
+    </div>
+    <div th:unless="${#lists.isEmpty(users)}">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">First name</th>
+                <th scope="col">Last name</th>
+                <th scope="col">Email</th>
+                <th scope="col">Age</th>
+                <th scope="col">Roles</th>
+                <th scope="col">Edit</th>
+                <th scope="col">Delete</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="user : ${users}">
+                <td th:text="${user.id}"></td>
+                <td th:text="${user.firstName}"></td>
+                <td th:text="${user.lastName}"></td>
+                <td th:text="${user.email}"></td>
+                <td th:text="${user.age}"></td>
+                <td th:text="${#strings.arrayJoin(user.roles, ' ').replace('ROLE_', '')}"></td>
+                <td>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#userEditModal"
+                            th:attr="data-bs-id=${user.id}, data-bs-firstname=${user.firstName}, data-bs-lastname=${user.lastName},
+                            data-bs-age=${user.age}, data-bs-email=${user.email}">Edit</button>
+                </td>
+                <td>
+                    <form th:method="post" th:action="@{/admin/delete}" style="display:inline;"
+                          onsubmit="return confirm('Are you sure you want to delete this user?')">
+                        <input type="hidden" name="id" th:value="${user.id}"/>
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
