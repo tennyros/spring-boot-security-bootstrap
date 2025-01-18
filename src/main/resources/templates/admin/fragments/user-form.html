@@ -30,17 +30,15 @@
     <div>
         <label for="password">Password</label>
         <input type="password" th:field="*{password}" id="password"
-               class="form-control" placeholder="Password" minlength="6" maxlength="18" required/><br>
+               class="form-control password-input" placeholder="Password" minlength="6" maxlength="18" required/><br>
         <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}"
              class="alert alert-danger" role="alert" style="color:red; text-align: center;"></div>
     </div>
     <div>
         <label for="passwordConfirm">Confirm password</label>
         <input type="password" th:field="*{passwordConfirm}" id="passwordConfirm"
-               class="form-control" placeholder="Confirm password" minlength="6" maxlength="18" required/><br>
-        <div th:if="${#fields.hasErrors('passwordConfirm')}" th:errors="*{passwordConfirm}"
-             class="alert alert-danger" role="alert" style="color:red; text-align: center;"></div>
-        <div id="password-error" class="alert alert-danger" role="alert" style="color:red; text-align: center; display: none;">
+               class="form-control password-confirm-input" placeholder="Confirm password" minlength="6" maxlength="18" required/><br>
+        <div id="password-error" class="password-error alert alert-danger" role="alert" style="color:red; text-align: center; display: none;">
             Passwords do not match.
         </div>
     </div>

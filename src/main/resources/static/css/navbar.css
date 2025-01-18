@@ -1,8 +1,8 @@
 #page_navbar .logout-link {
-     color: gray;
-     text-decoration: none;
-     transition: color 0.3s ease;
- }
+    color: gray;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
 
 #page_navbar .logout-link:hover {
     color: white;

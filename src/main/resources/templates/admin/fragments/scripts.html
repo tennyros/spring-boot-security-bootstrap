@@ -5,44 +5,45 @@
             crossorigin="anonymous"></script>
 
     <script>
-        document.getElementById('passwordConfirm').addEventListener('input', function() {
-            const password = document.getElementById('password').value;
-            const confirmPassword = this.value;
-            const errorMessage = document.getElementById('password-error');
+        document.querySelectorAll('.password-confirm-input').forEach(function(passwordConfirmElement) {
+            passwordConfirmElement.addEventListener('input', function() {
+                const form = this.closest('form');
+                const password = form.querySelector('.password-input').value;
+                const confirmPassword = this.value;
+                const errorMessage = form.querySelector('.password-error');
 
-            if (confirmPassword !== password) {
-                errorMessage.style.display = 'block';
-            } else {
-                errorMessage.style.display = 'none';
-            }
+                if (confirmPassword !== password) {
+                    errorMessage.style.display = 'block';
+                } else {
+                    errorMessage.style.display = 'none';
+                }
+            });
         });
     </script>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const editUserModal = document.getElementById('userEditModal');
-            editUserModal.addEventListener('show.bs.modal', function (event) {
-                const button = event.relatedTarget;
-                const userId = button.getAttribute('data-bs-id');
-                const userFirstName = button.getAttribute('data-bs-firstname');
-                const userLastName = button.getAttribute('data-bs-lastname');
-                const userAge = button.getAttribute('data-bs-age');
-                const userEmail = button.getAttribute('data-bs-email');
+        const editUserModal = document.getElementById('userEditModal');
+        editUserModal.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
+            const userId = button.getAttribute('data-bs-id');
+            const userFirstName = button.getAttribute('data-bs-firstname');
+            const userLastName = button.getAttribute('data-bs-lastname');
+            const userAge = button.getAttribute('data-bs-age');
+            const userEmail = button.getAttribute('data-bs-email');
 
-                const modalIdInput = editUserModal.querySelector('#user-id');
-                const hiddenIdInput = editUserModal.querySelector('#id');
-                const modalFirstNameInput = editUserModal.querySelector('#user-firstname');
-                const modalLastNameInput = editUserModal.querySelector('#user-lastname');
-                const modalAgeInput = editUserModal.querySelector('#user-age');
-                const modalEmailInput = editUserModal.querySelector('#user-email');
+            const modalIdInput = editUserModal.querySelector('#user-id');
+            const hiddenIdInput = editUserModal.querySelector('#id');
+            const modalFirstNameInput = editUserModal.querySelector('#user-firstname');
+            const modalLastNameInput = editUserModal.querySelector('#user-lastname');
+            const modalAgeInput = editUserModal.querySelector('#user-age');
+            const modalEmailInput = editUserModal.querySelector('#user-email');
 
-                modalIdInput.value = userId;
-                hiddenIdInput.value = userId;
-                modalFirstNameInput.value = userFirstName;
-                modalLastNameInput.value = userLastName;
-                modalAgeInput.value = userAge;
-                modalEmailInput.value = userEmail;
-            });
+            modalIdInput.value = userId;
+            hiddenIdInput.value = userId;
+            modalFirstNameInput.value = userFirstName;
+            modalLastNameInput.value = userLastName;
+            modalAgeInput.value = userAge;
+            modalEmailInput.value = userEmail;
         });
     </script>
 

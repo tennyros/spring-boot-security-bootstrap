@@ -9,10 +9,10 @@
 		<relativePath/>
 	</parent>
 	<groupId>ru.kata</groupId>
-	<artifactId>spring-boot_security-demo</artifactId>
+	<artifactId>spring-boot-security-bootstrap</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>spring-boot_security_bootstrap</name>
-	<description>Project for Spring Boot Bootstrap</description>
+	<description>Bootstrap Spring Boot Security App</description>
 
 	<properties>
 		<java.version>11</java.version>
